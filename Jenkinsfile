@@ -27,5 +27,16 @@ pipeline {
                 }
             }
         }
+        
+    stages {
+        stage('Docker Test') {
+            steps {
+                script {
+                    echo "Testing Docker connectivity..."
+                    sh 'docker info'
+                }
+            }
+        }
+    }
     }
 }
