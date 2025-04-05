@@ -1,28 +1,24 @@
 pipeline {
     agent any
-
     environment {
-        IMAGE_NAME = 'nadabj/expense-tracker'
-        IMAGE_TAG = 'latest'
-        REGISTRY_CREDENTIALS = 'docker-hub-credentials' // ID des credentials
+        REGISTRY_CREDENTIALS = 'docker-hub-credentials'  // Nom des credentials Jenkins
+        IMAGE_NAME = 'nadabouaouaja/expense-tracker'  // Ton nom d'image Docker Hub
+        IMAGE_TAG = 'latest'  // Tag de l'image
     }
-
     stages {
-        stage('Checkout Code') {
+        stage('Cloner le repo') {
             steps {
-                git 'https://github.com/nadabouaouaja/expense-tracker.git'
+                git branch: 'main', url: 'https://github.com/nadabouaouaja/expense-tracker.git'
             }
         }
-
-        stage('Build Docker Image') {
+        stage('Construire l\'image Docker') {
             steps {
                 script {
                     docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                 }
             }
         }
-
-        stage('Push Image to Docker Hub') {
+        stage('Pousser l\'image sur Docker Hub') {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', REGISTRY_CREDENTIALS) {
