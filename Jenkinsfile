@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = 'hi' // Change avec ton ID de credential
+        DOCKER_HUB_CREDENTIALS = 'hi' // Mettre à jour avec l'ID du credential correct
         DOCKER_IMAGE_NAME = 'nadabouaouaja/expense-tracker' // Nom de l'image
         DOCKER_IMAGE_TAG = 'latest' // Tag de l'image
     }
@@ -11,9 +11,9 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", usernameVariable: 'nadabj', passwordVariable: '197197123')]) {
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         bat """
-                             echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin
+                            docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%
                         """
                     }
                 }
