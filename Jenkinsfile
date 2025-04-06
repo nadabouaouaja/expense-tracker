@@ -1,31 +1,31 @@
 pipeline {
     agent any
+
     environment {
-        REGISTRY_CREDENTIALS = 'docker-hub-credentials'  // Nom des credentials Jenkins
-        IMAGE_NAME = 'nadabouaouaja/expense-tracker'  // Nom de ton image Docker sur Docker Hub
-        IMAGE_TAG = 'latest'  // Tag de l'image
+        DOCKER_HUB_CREDENTIALS = 'nadabj' // Change avec ton ID de credential
+        DOCKER_IMAGE_NAME = 'nadabouaouaja/expense-tracker' // Nom de l'image
+        DOCKER_IMAGE_TAG = 'latest' // Tag de l'image
     }
-    tools {
-        docker 'docker'  // Utiliser Docker installé automatiquement
-    }
+
     stages {
-        stage('Pousser l\'image sur Docker Hub') {
+        stage('Login to Docker Hub') {
             steps {
                 script {
-                    // Pousser l'image vers Docker Hub en utilisant les credentials Jenkins
-                    echo "Pushing Docker image to Docker Hub..."
-                    docker.withRegistry('https://index.docker.io/v1/', REGISTRY_CREDENTIALS) {
-                        docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        bat """
+                            docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%
+                        """
                     }
                 }
             }
         }
-        stage('Test Docker') {
+
+        stage('Push Docker Image') {
             steps {
                 script {
-                    // Tester la connectivité Docker (afficher des informations sur Docker)
-                    echo "Testing Docker connectivity..."
-                    sh 'docker info'
+                    bat """
+                        docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                    """
                 }
             }
         }
