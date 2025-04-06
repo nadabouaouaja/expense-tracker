@@ -13,7 +13,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", usernameVariable: 'nadabj', passwordVariable: '197197123')]) {
                         bat """
-                            docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%
+                             echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin
                         """
                     }
                 }
